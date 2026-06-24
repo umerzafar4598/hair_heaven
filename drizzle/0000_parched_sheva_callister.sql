@@ -1,3 +1,4 @@
+CREATE TYPE "public"."user_role" AS ENUM('customer', 'staff', 'owner');--> statement-breakpoint
 CREATE TYPE "public"."appointment_status" AS ENUM('scheduled', 'confirmed', 'in-progress', 'completed', 'cancelled', 'no-show');--> statement-breakpoint
 CREATE TYPE "public"."booking_source" AS ENUM('online', 'phone', 'walk-in', 'referral');--> statement-breakpoint
 CREATE TYPE "public"."payment_method" AS ENUM('cash', 'online', 'bank_transfer', 'easypaisa', 'jazzcash');--> statement-breakpoint
@@ -51,6 +52,9 @@ CREATE TABLE "user" (
 	"email" text NOT NULL,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"image" text,
+	"user_role" "user_role" DEFAULT 'customer',
+	"phone" text,
+	"avatar" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
