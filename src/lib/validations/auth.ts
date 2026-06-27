@@ -18,3 +18,5 @@ export const signinSchema = z.object({
 
 export type SignupForm = z.infer<typeof signupSchema>
 export type SigninForm = z.infer<typeof signinSchema>
+export type SignupFormInput = z.infer<typeof signupSchema>
+export type SigninFormInput = z.infer<typeof signinSchema>

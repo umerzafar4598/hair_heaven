@@ -27,14 +27,14 @@ export default function RootLayout({
         <Toaster
           position="top-left"
           gap={8}
-          theme="dark"
+          theme="light"
           toastOptions={{
             classNames: {
-              toast: "!bg-[#16161f] !border !border-white/10 !text-white/90 !shadow-2xl !rounded-2xl !font-medium",
-              title: "!text-white/90 !text-sm !font-semibold",
-              description: "!text-white/40 !text-xs",
+              toast: "!bg-[#535353] !border !border-white/10 !shadow-lg !rounded-2xl !font-medium ",
+              title: "!text-black !text-base !font-semibold",
+              description: "!text-white/70 !text-sm",
               success: "!border-emerald-500/25 [&>[data-icon]]:!text-emerald-400",
-              error: "!border-rose-500/25 [&>[data-icon]]:!text-rose-400",
+              error: "!border-violet-500/25 [&>[data-icon]]:!text-rose-400",
               icon: "!mr-3",
             },
           }}

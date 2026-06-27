@@ -1,9 +1,8 @@
 "use client"
 
 import { SUPPORTED_OAUTH_PROVIDERS, SUPPORTED_OAUTH_PROVIDERS_DETAILS } from "@/lib/o-auth-providers"
-
-import { authClient } from "@/lib/auth-client";
 import { BetterAuthActionButton } from "./better-auth-action-btn";
+import { authClient } from "@/lib/auth-client";
 
 export function SocialAuthButtons() {
     return SUPPORTED_OAUTH_PROVIDERS.map((provider) => {
@@ -12,9 +11,11 @@ export function SocialAuthButtons() {
             <BetterAuthActionButton
                 variant="outline"
                 key={provider}
-                type="button"
                 action={() => {
-                    return authClient.signIn.social({ provider, callbackURL: "/" })
+                    return authClient.signIn.social({
+                        provider,
+                        callbackURL: "/"
+                    })
                 }}
             >
                 <Icon />

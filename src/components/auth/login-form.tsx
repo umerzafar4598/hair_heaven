@@ -13,50 +13,45 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import logo from '../../../public/hair_heaven_logo.png'
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { signinSchema, type SigninForm } from "@/lib/validations/auth"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { authClient } from "@/lib/auth-client"
 import { toast } from "sonner"
 import { LoadingSwap } from "../ui/loading-swap"
 
 import { SocialAuthButtons } from "./social-auth-buttons"
+import { useActionState, useEffect } from "react"
+import { signInAction } from "@/actions/authAction"
+import { type AuthActionState } from "@/types/authAcitionState"
+import { useRouter } from "next/navigation"
 
+
+const initialState: AuthActionState = {
+    success: false,
+    message: '',
+    errors: {},
+}
 
 export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const [state, formAction, isPending] = useActionState(signInAction, initialState);
     const router = useRouter();
-    const { register, handleSubmit, formState } = useForm<SigninForm>({
-        resolver: zodResolver(signinSchema),
-        defaultValues: {
-            email: "",
-            password: "",
+    useEffect(() => {
+        if (state.success) {
+            toast.success("Login Successfull!",
+                { description: state.message, position: "top-right" }
+            )
+            router.push("/")
         }
-    });
-    const { isSubmitting, errors } = formState;
-    async function handleSignin(data: SigninForm) {
-        await authClient.signIn.email(
-            { ...data, callbackURL: "/" },
-            {
-                onError: (error) => {
-                    toast.error(error.error.message || "Login Failed!.", {
-                        description: "Please check your credentials."
-                    })
-                },
-                onSuccess: () => {
-                    router.push("/")
-                }
-            }
-        )
-    }
+        if (!state.success && state.message) {
+            toast.error("Login Failed!", { description: state.message, position: "top-right" })
+        }
+    }, [state, router])
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="overflow-hidden p-0 border border-black">
                 <CardContent className="grid p-0 md:grid-cols-2">
-                    <form className="p-6 md:p-8" onSubmit={handleSubmit(handleSignin)}>
+                    <form className="p-6 md:p-8" action={formAction}>
                         <FieldGroup>
                             <div className="flex flex-col items-center gap-2 text-center">
                                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -69,11 +64,14 @@ export function LoginForm({
                                 <Input
                                     id="email"
                                     type="email"
+                                    name="email"
                                     placeholder="you@example.com"
-                                    {...register("email")}
+                                    defaultValue={state.values?.email || ""}
                                 />
-                                {errors.email && (
-                                    <p className="text-destructive text-sm">{errors.email.message}</p>
+                                {state.errors?.email && (
+                                    <p id="email-error" className="text-red-500 text-sm">
+                                        {state.errors.email[0]}
+                                    </p>
                                 )}
                             </Field>
                             <Field>
@@ -89,15 +87,18 @@ export function LoginForm({
                                 <Input
                                     id="password"
                                     type="password"
-                                    {...register("password")}
+                                    name="password"
+                                    defaultValue={state.values?.password || ""}
                                 />
-                                {errors.password && (
-                                    <p className="text-destructive text-sm">{errors.password.message}</p>
+                                {state.errors?.password && (
+                                    <p id="password-error" className="text-red-500 text-sm">
+                                        {state.errors.password[0]}
+                                    </p>
                                 )}
                             </Field>
                             <Field>
-                                <Button type="submit" disabled={isSubmitting}>
-                                    <LoadingSwap isLoading={isSubmitting}>
+                                <Button type="submit" disabled={isPending}>
+                                    <LoadingSwap isLoading={isPending}>
                                         Login
                                     </LoadingSwap>
                                 </Button>
@@ -109,7 +110,7 @@ export function LoginForm({
                                 <SocialAuthButtons />
                             </Field>
                             <FieldDescription className="text-center">
-                                Don&apos;t have an account? <Link href="/register">Sign up</Link>
+                                Don&apos;t have an account? <Link href="/auth/register">Sign up</Link>
                             </FieldDescription>
                         </FieldGroup>
                     </form>

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function AppointmentsPage() {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) {
-        redirect('/login')
+        redirect('/auth/login')
     }
     return (
         <div>

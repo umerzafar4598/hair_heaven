@@ -16,6 +16,9 @@ export default async function BusinessLayout({
     children: React.ReactNode;
 }>) {
     const session = await auth.api.getSession({ headers: await headers() })
+    if (!session) {
+        redirect("/auth/login")
+    }
     if (session?.user.role !== "staff" && session?.user.role !== "owner") {
         redirect("/")
     }

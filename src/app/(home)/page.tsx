@@ -16,7 +16,7 @@ export default async function Home() {
                 <div className="flex flex-col items-center justify-center gap-2">
                     <h1 className="text-3xl font-bold">Welcome to Hair Heaven</h1>
                     <Button asChild size="lg">
-                        <Link href="/login">SignUp / Login</Link>
+                        <Link href="/auth/login">SignUp / Login</Link>
                     </Button>
                 </div>
             ) : (

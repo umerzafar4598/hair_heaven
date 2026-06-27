@@ -16,10 +16,10 @@ export default async function CustomerLayout({
 }>) {
     const session = await auth.api.getSession({ headers: await headers() })
     if (!session) {
-        redirect("/login")
+        redirect("/auth/login")
     }
     if (!session.user.emailVerified) {
-        redirect("/verify-email")
+        redirect("/auth/verify-email")
     }
     if (session.user.role !== "customer") {
         redirect("/dashboard")

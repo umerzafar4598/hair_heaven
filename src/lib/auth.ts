@@ -3,7 +3,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/index";
 import { nextCookies } from "better-auth/next-js";
-import { NextApiRequest } from "next";
+
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -15,12 +15,22 @@ export const auth = betterAuth({
     trustedOrigins: [process.env.BETTER_AUTH_URL!],
     emailAndPassword: {
         enabled: true,
+        // requireEmailVerification: true,
+        // sendResetPassword: async ({ user, url }) => {
+        //     await sendResetPasswordEmail({ user, url })
+        // },
     },
+    // emailVerification: {
+    //     autoSignInAfterVerification: true,
+    //     sendOnSignUp: true,
+    //     sendVerificationEmail: async ({ user, url }) => {
+    //         await sendVerificationEmail({ user, url })
+    //     }
+    // },
     socialProviders: {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`
         },
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,
@@ -50,3 +60,4 @@ export const auth = betterAuth({
 
 export type Session = typeof auth.$Infer.Session;
 export type User = typeof auth.$Infer.Session.user;
+export type OauthProvider = keyof typeof auth.options.socialProviders

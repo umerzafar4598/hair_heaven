@@ -20,8 +20,7 @@ export function BetterAuthActionButton({
                 } else {
                     return { error: false, message: successMessage }
                 }
-            }
-            }
+            }}
         />
     )
 
